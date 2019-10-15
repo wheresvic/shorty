@@ -1,0 +1,57 @@
+@import url("https://fonts.googleapis.com/css?family=Lato:400,700");
+
+// Set your brand colors
+
+// $purple: #8a4d76;
+// $pink: #fa7c91;
+// $brown: #757763;
+// $beige-light: #d0d1cd;
+// $beige-lighter: #eff0eb;
+
+// default bulma
+// $primary: $purple;
+// $link: #1e21d1;
+// $info: #12a750;
+
+/*
+$success: $green;
+$warning: $yellow;
+$danger: $red;
+$dark: $grey-darker;
+$text: $grey-dark;
+
+$grey-darker: hsl(0, 0%, 21%);
+$grey-dark: hsl(0, 0%, 29%);
+$grey: hsl(0, 0%, 48%);
+$grey-light: hsl(0, 0%, 71%);
+$grey-lighter: hsl(0, 0%, 86%);
+*/
+
+// Update Bulma's global variables
+$family-sans-serif: "Lato", sans-serif;
+
+// Update some of Bulma's component variables
+/*
+$control-border-width: 2px;
+$input-background-color: $beige-lighter;
+$input-border-color: transparent;
+$input-shadow: none;
+*/
+
+// Import the rest of Bulma
+@import "../../node_modules/bulma/bulma.sass";
+
+@import "./util.scss";
+
+.has-min-full-height {
+  min-height: 100vh;
+}
+
+.hero.is-fullheight-with-navbar {
+  // add footer
+  min-height: calc(100vh - 3.25rem - 6rem);
+}
+
+.footer {
+  padding: 3rem 1.5rem 3rem;
+}
