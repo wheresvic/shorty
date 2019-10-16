@@ -1,0 +1,13 @@
+// https://philipwalton.github.io/solved-by-flexbox/demos/sticky-footer/
+#main-content-container {
+	/* font-size: 1rem; */
+	/* font-weight: 400; */
+	/* line-height: 1.5; */
+	display: flex;
+	min-height: 100vh;
+	flex-direction: column;
+}
+
+#main-content {
+  flex: 1;
+}

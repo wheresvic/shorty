@@ -1,0 +1,45 @@
+.noty_theme__bulma.noty_bar {
+  margin: 4px 0;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid transparent;
+  font-size: 1em;
+  border-radius: .28571429rem;
+  box-shadow: 0 0 0 1px rgba(34, 36, 38, 0.22) inset, 0 0 0 0 transparent;
+ }
+  .noty_theme__bulma.noty_bar .noty_body {
+    padding: 1em 1.5em;
+    line-height: 1.4285em; }
+  .noty_theme__bulma.noty_bar .noty_buttons {
+    padding: 10px; }
+
+.noty_theme__bulma.noty_type__alert,
+.noty_theme__bulma.noty_type__notification {
+  background-color: #f8f8f9;
+  color: rgba(0, 0, 0, 0.87); 
+  }
+
+.noty_theme__bulma.noty_type__warning {
+  background-color: #FFDD57;
+color: #403716;
+  box-shadow: 0 0 0 1px #806F2B inset, 0 0 0 0 transparent;
+  }
+
+.noty_theme__bulma.noty_type__error {
+  background-color: #F14668;
+    color: #4D1521;
+  box-shadow: 0 0 0 1px #B3344D inset, 0 0 0 0 transparent;
+  }
+
+.noty_theme__bulma.noty_type__info,
+.noty_theme__bulma.noty_type__information {
+  background-color: #3298DC;
+  color: #15405C;
+  box-shadow: 0 0 0 1px #246C9C inset, 0 0 0 0 transparent;
+  }
+
+.noty_theme__bulma.noty_type__success {
+  background-color: #48C774;
+  color: #12331E;
+  box-shadow: 0 0 0 1px #31874F inset, 0 0 0 0 transparent; 
+  }

@@ -64,4 +64,11 @@ typings/
 .vscode/
 
 # compiled
-public/css/
+public/css-app/
+
+# runtime
+sessions/
+
+# db files
+*.db
+

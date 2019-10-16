@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  {{> partials/head}}
+
+  <body>
+    <div id="main-content-container">
+      {{> partials/navbar}}
+      <div id="main-content">
+        <section class="section">
+          <div class="container`">
+            <div class="columns">
+              <div class="column is-8-desktop is-offset-2-desktop">
+                <!--
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Link</th>
+                      <th>Click count</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    
+                    <tr>
+                      <td>
+                        <a href="{{ shortLink }}">{{ link }}</a>
+                      </td>
+                      <td class="has-text-centered">{{ clickCount }}</td>
+                      <td class="has-text-centered"><button class="button">x</button></td>
+                    </tr>
+                    
+                  </tbody>
+                </table>
+                -->
+
+                <!--
+                <div class="columns is-mobile">
+                  <div class="column">
+                    Link
+                  </div>
+                  <div class="column has-text-centered">
+                    Click count
+                  </div>
+                  <div class="column has-text-centered">
+                    Action
+                  </div>
+                </div>
+                -->
+
+                {{^links}}
+                <div class="columns is-centered">
+                  <div class="column is-6">
+                    <div class="notification">
+                      No links stored yet!
+                    </div>
+                  </div>
+                </div>
+                {{/links}}
+
+                {{#links}}
+                <div class="columns is-mobile is-vcentered">
+                  <div class="column is-9">
+                    <a href="{{ shortLink }}">{{ link }}</a>
+                  </div>
+                  <div class="column has-text-centered is-2">
+                    {{ clickCount }}
+                  </div>
+                  <div class="column has-text-centered is-1">
+                    <form
+                      method="POST"
+                      action="/links"
+                      onsubmit="return confirm(
+                      'Are you sure you want to delete this link?');"
+                    >
+                      <input type="hidden" name="shortLinkId" value="{{ shortLinkId }}" />
+                      <input type="hidden" name="link" value="{{ link }}" />
+                      <input type="hidden" name="linkId" value="{{ _id }}" />
+                      <button type="submit" class="button">
+                        <i class="fas fa-trash-alt fa-fw fa-1x"></i>
+                      </button>
+                    </form>
+                  </div>
+                </div>
+                {{/links}}
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <!-- end main-content-container -->
+      {{> partials/footer}}
+    </div>
+  </body>
+</html>

@@ -1,0 +1,12 @@
+<form method="post" action="/">
+  <div class="field has-addons has-shadow-field">
+    <p class="control is-expanded">
+      <input name="link" class="input is-large" type="text" placeholder="enter link" />
+    </p>
+    <p class="control">
+      <button name="shorten" type="submit" class="button is-large is-primary">
+        <span class="has-text-weight-semibold">Go!</span>
+      </button>
+    </p>
+  </div>
+</form>

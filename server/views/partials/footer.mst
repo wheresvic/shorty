@@ -1,0 +1,10 @@
+<footer class="footer">
+  <div class="container">
+    <div class="columns">
+      <div class="column">
+        <p><i class="fab fa-github fa-fw fa-2x"></i></p>
+        <p>Last updated: {{ lastUpdated }}</p>
+      </div>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,22 @@
+{
+  "hooks": {
+    "before:init": ["npm run server:test", "jq --arg x `perl -e 'print time'` '.lastUpdated = $x' ./last-updated.json | sponge ./last-updated.json"],
+    "before:bump": null,
+    "after:bump": null,
+    "before:release": null,
+    "after:release": "git describe --abbrev=0 --tags"
+  },
+  "git": {
+    "requireCleanWorkingDir": false,
+    "addUntrackedFiles": true
+  },
+  "npm": {
+    "publish": false
+  },
+  "github": {
+    "release": true
+  },
+  "gitlab": {
+    "release": false
+  }
+}

@@ -1,0 +1,76 @@
+<nav class="navbar is-light has-shadow" role="navigation" aria-label="main navigation">
+  <div class="container">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="/">
+        Shorty
+      </a>
+
+      <a
+        role="button"
+        class="navbar-burger burger"
+        aria-label="menu"
+        aria-expanded="false"
+        data-target="navbarBasicExample"
+      >
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div id="navbarBasicExample" class="navbar-menu">
+      <div class="navbar-start">
+        <a class="navbar-item" href="/">
+          Home
+        </a>
+        {{#username}}
+        <a class="navbar-item" href="/links">
+          Links
+        </a>
+        {{/username}}
+      </div>
+
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <span class="tag is-dark">
+            {{ version }}
+          </span>
+        </div>
+        <div class="navbar-item">
+          {{^username}}
+          <!--
+          <div class="buttons">
+            <a class="button is-link" href="/login">
+              Login
+            </a>
+          </div>
+          -->
+
+          <form method="post" action="/login">
+            <div class="field is-grouped is-grouped-right">
+              <p class="control">
+                <input name="username" class="input" type="text" placeholder="username" />
+              </p>
+              <p class="control">
+                <input name="password" class="input" type="password" placeholder="password" />
+              </p>
+              <p class="control">
+                <button id="login" type="submit" class="button is-primary">
+                  Login
+                </button>
+              </p>
+            </div>
+          </form>
+          {{/username}}
+          {{#username}}
+          <div class="buttons">
+            <a class="button" href="/logout">
+              Logout
+            </a>
+          </div>
+          {{/username}}
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

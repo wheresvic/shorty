@@ -1,4 +1,5 @@
-@import url("https://fonts.googleapis.com/css?family=Lato:400,700");
+// @import url("https://fonts.googleapis.com/css?family=Montserrat");
+// @import url("https://fonts.googleapis.com/css?family=Lato");
 
 // Set your brand colors
 
@@ -43,8 +44,22 @@ $input-shadow: none;
 
 @import "./util.scss";
 
+@import "./sticky-footer.scss";
+
 .has-min-full-height {
   min-height: 100vh;
+}
+
+.link-underlined {
+  text-decoration: underline;
+}
+
+.link-underlined:hover {
+  text-decoration: none;
+}
+
+.is-text-underlined {
+  text-decoration: underline;
 }
 
 .hero.is-fullheight-with-navbar {
@@ -54,4 +69,96 @@ $input-shadow: none;
 
 .footer {
   padding: 3rem 1.5rem 3rem;
+  p + p {
+    margin-top: 1rem;
+  }
+}
+
+.background-result {
+  min-height: 330px;
+  background-image: url("/images/undraw-result-shorty.png");
+  background-repeat: no-repeat;
+  // background-attachment: fixed;
+  background-position: center bottom;
+}
+
+@media screen and (max-width: 768px) {
+  .level-item:not(:last-child) {
+    margin-bottom: 2rem;
+  }
+
+  .background-result {
+    min-height: 500px;
+  }
+}
+
+/*
+.noty_body {
+  word-break: break-all;
+}
+*/
+
+//
+// ideas from https://aldi.github.io/awesome-bulma-templates/templates/rent/rent.html
+//
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: Montserrat, sans-serif;
+  font-weight: 600;
+}
+.title {
+  font-weight: 600;
+}
+.subtitle {
+  font-family: BlinkMacSystemFont, -apple-system, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans,
+    Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-weight: 500;
+}
+.hero.is-light .subtitle,
+.subtitle {
+  color: #99a6b3;
+}
+.field.has-shadow-field {
+  -webkit-box-shadow: 0 5px 30px hsla(224, 8%, 64%, 0.25) !important;
+  box-shadow: 0 5px 30px hsla(224, 8%, 64%, 0.25) !important;
+}
+.button {
+  -webkit-transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out;
+  font-family: Montserrat, sans-serif;
+  font-weight: 500;
+}
+.button.is-shadowy {
+  box-shadow: 0 5px 30px hsla(224, 8%, 64%, 0.25);
+  -webkit-box-shadow: 0 5px 30px hsla(224, 8%, 64%, 0.25);
+  -moz-box-shadow: 0 5px 30px hsla(224, 8%, 64%, 0.25);
+}
+.button.is-shadowy:hover {
+  -webkit-box-shadow: 0 16px 43px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 16px 43px 2px rgba(0, 0, 0, 0.2);
+}
+a {
+  -webkit-transition: color 0.3s ease-out;
+  transition: color 0.3s ease-out;
+}
+.input {
+  box-shadow: none;
+  -webkit-box-shadow: none;
+}
+.input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 30px #fff inset;
+  box-shadow: 0 0 0 30px #fff inset;
+}
+.input:invalid {
+  outline: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.input:active,
+.input:focus {
+  -webkit-box-shadow: none;
+  box-shadow: none;
 }

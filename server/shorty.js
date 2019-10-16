@@ -1,16 +1,19 @@
-const env = process.env.NODE_ENV || "development";
-
 const configuration = require("./config");
-const ShortyHttpServer = require("./ShortyHttpServer");
+
+const ShortyHttpServer = require("./routes/ShortyHttpServer");
+const DbNeDB = require("./db/DbNeDB");
 
 function main() {
   configuration
     .init()
-    .then(ic => {
-      const server = new ShortyHttpServer(ic);
+    .then(async ic => {
+      const db = new DbNeDB(ic);
+      await db.init();
+
+      const server = new ShortyHttpServer(ic, db);
       server.listen(ic.httpPort);
       ic.logger.info("ShortyHttpServer listening on " + ic.httpPort);
-      return ic;
+      
     })
     .catch(err => {
       console.error(err);
