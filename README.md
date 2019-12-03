@@ -37,8 +37,16 @@ $ npm run sass:build
 $ npm run server:start
 ```
 
-## release
+### release
 
 ```bash
 $ npm run release-it
+```
+
+### deployment
+
+While you can use just about anything to deploy this on your server, it comes preconfigured with `pm2` and a deploy script which can be executed to deploy from a provided tag (uses latest by default):
+
+```bash
+$ ./scripts/deploy.sh
 ```
