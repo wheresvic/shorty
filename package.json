@@ -4,6 +4,7 @@
   "description": "A simple private url shortener using Node.js & MySQL",
   "main": "server/shorty.js",
   "scripts": {
+    "istanbul": "NODE_ENV=test istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly 'server/**/*.test.js' -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "server:start": "node server/shorty.js",
     "server:start:dev": "NODE_ENV=development nodemon -e js,mst,css --watch server --watch public server/shorty.js",
     "sass:watch": "node-sass -w styles/scss -o public/css-app",
