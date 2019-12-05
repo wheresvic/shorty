@@ -47,8 +47,8 @@ git checkout $tag
 check_command_success "git checkout $tag"
 
 print_command_header "install dependencies"
-npm install --prefer-offline --production
-check_command_success "npm install --prefer-offline --production"
+npm install --prefer-offline
+check_command_success "npm install --prefer-offline"
 
 print_command_header "build css"
 npm run sass:build
