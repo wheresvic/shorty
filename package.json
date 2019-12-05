@@ -9,6 +9,7 @@
     "sass:watch": "node-sass -w styles/scss -o public/css-app",
     "sass:build": "node-sass styles/scss -o public/css-app --source-map true",
     "server:test": "NODE_ENV=test mocha --opts server/mocha.opts 'server/**/*.test.js'",
+    "server:test:coverage": "nyc --reporter=html --reporter=text ./node_modules/mocha/bin/_mocha --opts server/mocha.opts 'server/**/*.test.js' && firefox ./coverage/index.html",
     "release-it": "release-it"
   },
   "repository": {
@@ -43,8 +44,11 @@
   "devDependencies": {
     "chai": "4.2.0",
     "cheerio": "1.0.0-rc.3",
+    "coveralls": "3.0.9",
+    "istanbul": "0.4.5",
     "mocha": "6.2.2",
     "node-sass": "4.13.0",
+    "nyc": "14.1.1",
     "release-it": "12.4.3",
     "supertest": "4.0.2"
   }
