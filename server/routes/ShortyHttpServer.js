@@ -15,7 +15,7 @@ const auth = require("./auth");
 const linkSchema = require("../schemas/link");
 const { generateShortLinkObj, createShortLink } = require("../util/link-util");
 
-// TODO: logo, cache?
+// TODO: cache?
 
 class ShortyHttpServer {
   constructor(ic, db) {
