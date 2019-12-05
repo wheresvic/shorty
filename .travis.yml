@@ -4,6 +4,8 @@ node_js:
   - "10"
 before_script:
   - npm install
+script:
+  - npm run server:test
 notifications:
   email:
     - vic@smalldata.tech
