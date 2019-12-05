@@ -27,7 +27,7 @@ $ npm install
 $ npm run sass:build
 $ npm i -g nodemon
 $ npm run sass:watch
-$ npm run server:stat:dev
+$ npm run server:start:dev
 ```
 
 ## production
