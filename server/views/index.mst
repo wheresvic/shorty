@@ -21,7 +21,7 @@
               </h1>
 
               <div class="columns m-t-3 m-b-2">
-                <div class="column column is-8-desktop is-offset-2-desktop">
+                <div class="column is-8-desktop is-offset-2-desktop">
                   {{> partials/shorten-link-form}}
                 </div>
               </div>

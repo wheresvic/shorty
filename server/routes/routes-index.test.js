@@ -48,6 +48,7 @@ describe("Index routes", function() {
 
       // then
       expect(response.text.includes("Need to be logged in to perform this action!")).to.be.true;
+      expect(getShortLinkHref(response.text)).to.be.undefined;
     });
 
     it("should get an error when trying to shorten an empty link", async function() {
@@ -65,6 +66,7 @@ describe("Index routes", function() {
       // console.log(response.text);
 
       expect(response.text.includes("&quot;link&quot; is not allowed to be empty")).to.be.true;
+      expect(getShortLinkHref(response.text)).to.be.undefined;
     });
 
     it("should get an error when trying to shorten a link greater than 4096 characters", async function() {
@@ -90,10 +92,7 @@ describe("Index routes", function() {
       expect(response.text.includes("&quot;link&quot; length must be less than or equal to 4096 characters long")).to.be
         .true;
 
-      const $ = cheerio.load(response.text);
-      const $shortLink = $("#short-link");
-      const shortLink = $shortLink.attr("href");
-      expect(shortLink).to.be.undefined;
+      expect(getShortLinkHref(response.text)).to.be.undefined;
     });
 
     it("should shorten a link", async function() {
@@ -118,10 +117,7 @@ describe("Index routes", function() {
       // check response
       expect(response.text.includes("Successfully shortened link: test")).to.be.true;
 
-      const $ = cheerio.load(response.text);
-      const $shortLink = $("#short-link");
-      const shortLink = $shortLink.attr("href");
-
+      const shortLink = getShortLinkHref(response.text);
       // console.log(shortLink);
       expect(shortLink.startsWith(ic.appUrl + "/to/")).to.be.true;
 
@@ -140,5 +136,78 @@ describe("Index routes", function() {
         shortLinkId
       });
     });
+
+    it("should shorten a link when a shortLinkId is provided", async function() {
+      // given
+      const now = moment().unix();
+      const shortLinkId = "abc";
+
+      const authRequest = supertest.agent(url);
+      const r1 = await testUtil.login(ic, authRequest);
+      // console.log(r1.text); // Found. Redirecting to /
+
+      const r2 = await authRequest.get("/");
+      // console.log(r2.text); // actual content
+
+      // when
+      const response = await authRequest
+        .post("/")
+        .type("form")
+        .send({ link: "test", shortLinkId });
+
+      // then
+
+      // check response
+      expect(response.text.includes("Successfully shortened link: test")).to.be.true;
+
+      const shortLink = getShortLinkHref(response.text);
+      // console.log(shortLink);
+      expect(shortLink).to.equal(ic.appUrl + "/to/abc");
+
+      // check db
+      const linkDoc = await db.linkGetByShortLinkId(shortLinkId);
+      expect(linkDoc.when).to.be.within(now, now + 1);
+
+      delete linkDoc.when;
+      delete linkDoc._id;
+      expect(linkDoc).to.deep.equal({
+        link: "test",
+        userId: ic.appUsername,
+        shortLink,
+        shortLinkId
+      });
+    });
+
+    it("should throw an error when trying to shorten a link with a duplicate shortLinkId", async function() {
+      // given
+      const link = testUtil.getRandomLinkObj({});
+      await db.linkAdd(link);
+
+      const authRequest = supertest.agent(url);
+      const r1 = await testUtil.login(ic, authRequest);
+      // console.log(r1.text); // Found. Redirecting to /
+
+      const r2 = await authRequest.get("/");
+      // console.log(r2.text); // actual content
+
+      // when
+      const response = await authRequest
+        .post("/")
+        .type("form")
+        .send({ link: "test2", shortLinkId: link.shortLinkId });
+
+      // then
+
+      // check response
+      expect(response.text.includes("Provided shortLinkId is already in use.")).to.be.true;
+      expect(getShortLinkHref(response.text)).to.be.undefined;
+    });
   });
 });
+
+function getShortLinkHref(responseText) {
+  const $ = cheerio.load(responseText);
+  const $shortLink = $("#short-link");
+  const shortLink = $shortLink.attr("href");
+  return shortLink;
+}

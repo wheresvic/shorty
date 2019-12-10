@@ -118,13 +118,24 @@ class ShortyHttpServer {
           when: moment().unix()
         };
 
+        if (req.body.shortLinkId) {
+          linkObj.shortLinkId = req.body.shortLinkId;
+        }
+
         if (linkObj.userId) {
           const { error } = linkSchema.validate(linkObj);
           if (error) {
             req.renderData.notification = { message: error.message, type: "error" };
           } else {
-            linkObj = await shortenLink(ic, db, linkObj);
-            req.renderData.notification = { message: "Successfully shortened link: " + linkObj.link, type: "success" };
+            try {
+              linkObj = await shortenLink(ic, db, linkObj);
+              req.renderData.notification = {
+                message: "Successfully shortened link: " + linkObj.link,
+                type: "success"
+              };
+            } catch (e) {
+              req.renderData.notification = { message: e.message, type: "error" };
+            }
           }
         } else {
           req.renderData.notification = { message: "Need to be logged in to perform this action!", type: "error" };
@@ -173,7 +184,6 @@ class ShortyHttpServer {
           res.redirect("/");
           return;
         }
-
 
         await db.linkRemoveById(req.body.linkId);
         await db.clickRemoveByShortLinkId(req.body.shortLinkId);
@@ -259,9 +269,19 @@ class ShortyHttpServer {
 }
 
 const shortenLink = async function(ic, db, linkObj) {
-  const shortLinkObj = await generateShortLinkObj(ic.appUrl, db);
-  linkObj.shortLink = shortLinkObj.shortLink;
-  linkObj.shortLinkId = shortLinkObj.shortLinkId;
+  if (linkObj.shortLinkId) {
+    const found = await db.linkGetByShortLinkId(linkObj.shortLinkId);
+    if (found) {
+      throw new Error("Provided shortLinkId is already in use.");
+    }
+
+    linkObj.shortLink = createShortLink(ic.appUrl, linkObj.shortLinkId);
+  } else {
+    const shortLinkObj = await generateShortLinkObj(ic.appUrl, db);
+    linkObj.shortLink = shortLinkObj.shortLink;
+    linkObj.shortLinkId = shortLinkObj.shortLinkId;
+  }
+
   const doc = await db.linkAdd(linkObj);
   return doc;
 };

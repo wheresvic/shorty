@@ -1,12 +1,35 @@
 <form method="post" action="/">
-  <div class="field has-addons has-shadow-field">
-    <p class="control is-expanded">
-      <input name="link" class="input is-large" type="text" placeholder="enter link" />
-    </p>
-    <p class="control">
-      <button name="shorten" type="submit" class="button is-large is-primary">
-        <span class="has-text-weight-semibold">Go!</span>
-      </button>
-    </p>
+  <div class="columns">
+    <div class="column">
+      <div class="field has-addons has-shadow-field">
+        <div class="control is-expanded">
+          <input name="link" class="input is-large" type="text" placeholder="enter link" />
+        </div>
+        <div class="control">
+          <button name="shorten" type="submit" class="button is-large is-primary">
+            <span class="has-text-weight-semibold">Go!</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="columms is-mobile">
+    <div class="column is-6-tablet is-offset-3-tablet">
+      <div class="field">
+        <label class="checkbox">
+          <input id="enable-short-link-id" name="enableShortLinkId" class="checkbox" type="checkbox" />
+          Use a fixed short link
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="columns is-mobile">
+    <div class="column is-6-tablet is-offset-3-tablet">
+      <div class="field has-shadow-field">
+        <input id="short-link-id" name="shortLinkId" class="input" type="text" placeholder="goto" disabled="disabled" />
+      </div>
+    </div>
   </div>
 </form>
