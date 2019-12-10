@@ -199,6 +199,8 @@ class ShortyHttpServer {
             when: new Date().getTime()
           };
 
+          delete clickObj._id;
+
           await db.clickAdd(clickObj);
 
           res.redirect(linkObj.link);
