@@ -59,7 +59,10 @@
 
                 {{#links}}
                 <div class="columns is-mobile is-vcentered">
-                  <div class="column is-9">
+                  <div class="column is-2">
+                    <a href="{{ shortLink }}">{{ shortLinkId }}</a>
+                  </div>
+                  <div class="column is-7">
                     <a href="{{ shortLink }}">{{ link }}</a>
                   </div>
                   <div class="column has-text-centered is-2">
