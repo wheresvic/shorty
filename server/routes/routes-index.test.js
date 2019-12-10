@@ -71,8 +71,6 @@ describe("Index routes", function() {
 
     it("should get an error when trying to shorten a link greater than 4096 characters", async function() {
       // given
-      const now = moment().unix();
-
       const authRequest = supertest.agent(url);
       const r1 = await testUtil.login(ic, authRequest);
       // console.log(r1.text); // Found. Redirecting to /
@@ -175,6 +173,49 @@ describe("Index routes", function() {
         userId: ic.appUsername,
         shortLink,
         shortLinkId
+      });
+    });
+
+    it("should shorten a link with a random id when a blank shortLinkId is provided", async function() {
+      // given
+      const now = moment().unix();
+      const shortLinkId = " ";
+
+      const authRequest = supertest.agent(url);
+      const r1 = await testUtil.login(ic, authRequest);
+      // console.log(r1.text); // Found. Redirecting to /
+
+      const r2 = await authRequest.get("/");
+      // console.log(r2.text); // actual content
+
+      // when
+      const response = await authRequest
+        .post("/")
+        .type("form")
+        .send({ link: "test7", shortLinkId });
+
+      // then
+
+      // check response
+      expect(response.text.includes("Successfully shortened link: test7")).to.be.true;
+
+      const shortLink = getShortLinkHref(response.text);
+      // console.log(shortLink);
+      expect(shortLink.startsWith(ic.appUrl + "/to/")).to.be.true;
+
+      const rShortLinkId = shortLink.substring(ic.appUrl.length + 4);
+
+      // check db
+      const linkDoc = await db.linkGetByShortLinkId(rShortLinkId);
+      expect(linkDoc.when).to.be.within(now, now + 1);
+
+      delete linkDoc.when;
+      delete linkDoc._id;
+      expect(linkDoc).to.deep.equal({
+        link: "test7",
+        userId: ic.appUsername,
+        shortLink,
+        shortLinkId: rShortLinkId
       });
     });
 

@@ -113,13 +113,16 @@ class ShortyHttpServer {
       middlewareStats,
       wrap(async function(req, res) {
         let linkObj = {
-          link: req.body.link,
+          link: req.body.link ? req.body.link.trim() : "",
           userId: req.renderData.username,
           when: moment().unix()
         };
 
-        if (req.body.shortLinkId) {
-          linkObj.shortLinkId = req.body.shortLinkId;
+        if (req.body.shortLinkId !== undefined) {
+          req.body.shortLinkId = req.body.shortLinkId.trim();
+          if (req.body.shortLinkId) {
+            linkObj.shortLinkId = req.body.shortLinkId;
+          }
         }
 
         if (linkObj.userId) {
