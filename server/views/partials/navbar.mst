@@ -49,7 +49,7 @@
           -->
 
           <form method="post" action="/login">
-            <div class="field is-grouped is-grouped-right">
+            <div class="field is-grouped is-grouped-multiline">
               <p class="control">
                 <input name="username" class="input" type="text" placeholder="username" />
               </p>
