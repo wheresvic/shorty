@@ -30,6 +30,10 @@
           Links
         </a>
         {{/username}}
+
+        <a class="navbar-item" href="/encrypt-text">
+          Encrypt Text
+        </a>
       </div>
 
       <div class="navbar-end">

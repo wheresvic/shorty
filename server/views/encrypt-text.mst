@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+  {{> partials/head}}
+
+  <body>
+    <div id="main-content-container">
+      {{> partials/navbar}}
+      <div id="main-content">
+        <section class="section">
+          <div class="container`">
+            <div class="columns">
+              <div class="column is-8-desktop is-offset-2-desktop is-6-tablet is-offset-3-tablet">
+                <form>
+                  <div class="field">
+                    <label class="label">Secret (16 characters)</label>
+                    <div class="control has-icons-left">
+                      <input
+                        id="key"
+                        name="key"
+                        class="input is-danger"
+                        type="text"
+                        placeholder="secret key"
+                        value=""
+                      />
+                      <span class="icon is-small is-left">
+                        <i class="fas fa-key"></i>
+                      </span>
+                      <!--
+                      <span class="icon is-small is-right">
+                        <i class="fas fa-check"></i>
+                      </span>
+                      -->
+                    </div>
+                    <p id="key-help" class="help is-danger">16 characters more ...</p>
+                  </div>
+
+                  <div class="field">
+                    <label class="label">Text</label>
+                    <div class="control">
+                      <textarea id="text" name="text" class="textarea" placeholder="Textarea"></textarea>
+                    </div>
+                  </div>
+
+                  <div class="field is-grouped">
+                    <div class="control">
+                      <button
+                        id="btn-encrypt"
+                        type="submit"
+                        class="button is-link"
+                        value="encrypt"
+                        formmethod="POST"
+                        formaction="/do-encrypt-text"
+                      >
+                        Encrypt
+                      </button>
+                    </div>
+                    <div class="control">
+                      <button
+                        id="btn-decrypt"
+                        type="submit"
+                        class="button is-link is-light"
+                        value="decrypt"
+                        formmethod="POST"
+                        formaction="/do-decrypt-text"
+                      >
+                        Decrypt
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            {{#result}}
+            <div class="columns">
+              <div class="column is-8-desktop is-offset-2-desktop is-6-tablet is-offset-3-tablet">
+                <form>
+                  <div class="field">
+                    <label class="label">Result ({{ when }})</label>
+                    <div class="control">
+                      <textarea id="result" name="result" class="textarea" readonly="readonly">{{ result }}</textarea>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            {{/result}}
+          </div>
+        </section>
+      </div>
+      <!-- end main-content-container -->
+      {{> partials/footer}}
+    </div>
+
+    <script type="text/javascript">
+      $key = $("#key");
+      $keyHelp = $("#key-help");
+      $btnEncrypt = $("#btn-encrypt");
+      $btnDecrypt = $("#btn-decrypt");
+
+      function validateKey() {
+        var val = $key.val();
+
+        if (val.length !== 16) {
+          $key.removeClass("is-success");
+          $keyHelp.removeClass("is-success");
+
+          $key.addClass("is-danger");
+          $keyHelp.addClass("is-danger");
+          $keyHelp.text("Need " + (16 - val.length) + " characters more ...");
+
+          $btnEncrypt.prop("disabled", "disabled");
+          $btnDecrypt.prop("disabled", "disabled");
+        } else {
+          $key.removeClass("is-danger");
+          $keyHelp.removeClass("is-danger");
+
+          $key.addClass("is-success");
+          $keyHelp.addClass("is-success");
+
+          $keyHelp.text("");
+
+          $btnEncrypt.prop("disabled", "");
+          $btnDecrypt.prop("disabled", "");
+        }
+      }
+
+      $("#key").keyup(validateKey);
+
+      validateKey();
+    </script>
+  </body>
+</html>
