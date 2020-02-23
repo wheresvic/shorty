@@ -12,7 +12,7 @@
               <div class="column is-8-desktop is-offset-2-desktop is-6-tablet is-offset-3-tablet">
                 <form>
                   <div class="field">
-                    <label class="label">Secret (16 characters)</label>
+                    <label class="label">Secret (min 8 characters)</label>
                     <div class="control has-icons-left">
                       <input
                         id="key"
@@ -97,16 +97,18 @@
       $btnEncrypt = $("#btn-encrypt");
       $btnDecrypt = $("#btn-decrypt");
 
+      minCharacters = 8;
+
       function validateKey() {
         var val = $key.val();
 
-        if (val.length !== 16) {
+        if (val.length < minCharacters) {
           $key.removeClass("is-success");
           $keyHelp.removeClass("is-success");
 
           $key.addClass("is-danger");
           $keyHelp.addClass("is-danger");
-          $keyHelp.text("Need " + (16 - val.length) + " characters more ...");
+          $keyHelp.text("Need " + (minCharacters - val.length) + " characters more ...");
 
           $btnEncrypt.prop("disabled", "disabled");
           $btnDecrypt.prop("disabled", "disabled");
@@ -124,7 +126,8 @@
         }
       }
 
-      $("#key").keyup(validateKey);
+      $key.keyup(validateKey);
+      $key.focusout(validateKey);
 
       validateKey();
     </script>

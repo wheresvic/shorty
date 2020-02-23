@@ -228,7 +228,7 @@ class ShortyHttpServer {
     // encrypt text
     //
 
-    server.get("/encrypt-text", middlewareSetMimeTypeTextHtml, routesEncryptText.encryptTextGet);
+    server.get("/encrypt-decrypt-text", middlewareSetMimeTypeTextHtml, routesEncryptText.encryptTextGet);
     server.post("/do-encrypt-text", middlewareSetMimeTypeTextHtml, routesEncryptText.doEncryptTextPost);
     server.post("/do-decrypt-text", middlewareSetMimeTypeTextHtml, routesEncryptText.doDecryptTextPost);
 

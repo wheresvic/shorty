@@ -31,8 +31,8 @@
         </a>
         {{/username}}
 
-        <a class="navbar-item" href="/encrypt-text">
-          Encrypt Text
+        <a class="navbar-item" href="/encrypt-decrypt-text">
+          Encrypt/Decrypt Text
         </a>
       </div>
 
