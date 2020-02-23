@@ -43,7 +43,11 @@ const decrypt = function(encryptedHex, secret) {
 };
 
 const getCipherKey = function(key) {
-  return crypto.scryptSync(key, "salt", 32);
+  if (key && key.length >= 8) {
+    return crypto.scryptSync(key, "salt", 32);
+  } else {
+    throw new Error("Invalid key, must be min 8 characters");
+  }
 };
 
 module.exports = {

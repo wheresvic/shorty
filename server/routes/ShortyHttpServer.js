@@ -14,7 +14,7 @@ const { wrap, middlewareSetMimeTypeTextHtml } = require("./middleware");
 const auth = require("./auth");
 const linkSchema = require("../schemas/link");
 const { generateShortLinkObj, createShortLink } = require("../util/link-util");
-const routesEncryptText = require("./routes-encrypt-text");
+const routesEncryptDecryptText = require("./routes-encrypt-decrypt-text");
 
 // TODO: cache?
 
@@ -228,9 +228,9 @@ class ShortyHttpServer {
     // encrypt text
     //
 
-    server.get("/encrypt-decrypt-text", middlewareSetMimeTypeTextHtml, routesEncryptText.encryptTextGet);
-    server.post("/do-encrypt-text", middlewareSetMimeTypeTextHtml, routesEncryptText.doEncryptTextPost);
-    server.post("/do-decrypt-text", middlewareSetMimeTypeTextHtml, routesEncryptText.doDecryptTextPost);
+    server.get("/encrypt-decrypt-text", middlewareSetMimeTypeTextHtml, routesEncryptDecryptText.encryptTextGet);
+    server.post("/do-encrypt-text", middlewareSetMimeTypeTextHtml, routesEncryptDecryptText.doEncryptTextPost);
+    server.post("/do-decrypt-text", middlewareSetMimeTypeTextHtml, routesEncryptDecryptText.doDecryptTextPost);
 
     //
     // auth
