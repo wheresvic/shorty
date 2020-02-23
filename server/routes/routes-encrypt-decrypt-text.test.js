@@ -1,14 +1,16 @@
 const { expect } = require("chai");
 const cheerio = require("cheerio");
+const supertest = require("supertest");
 
 const testUtil = require("../util/test-util");
 
 describe("Encrypt/Decrypt text routes", function() {
   let server = null;
   let request = null;
-  // let ic = null;
-  // let url = null;
+  let ic = null;
+  let url = null;
   let db = null;
+  let authRequest = null;
 
   before(async function() {
     const result = await testUtil.routeTestSetup();
@@ -17,6 +19,9 @@ describe("Encrypt/Decrypt text routes", function() {
     ic = result.ic;
     url = result.url;
     db = result.db;
+
+    authRequest = supertest.agent(url);
+    await testUtil.login(ic, authRequest);
   });
 
   after(async function() {
@@ -42,7 +47,7 @@ describe("Encrypt/Decrypt text routes", function() {
   describe(`POST /do-encrypt-text`, function() {
     it("should get an error when trying to encrypt text with no key", async function() {
       // when
-      const response = await request
+      const response = await authRequest
         .post("/do-encrypt-text")
         .type("form")
         .send({ text: "xxx", key: "" });
@@ -57,7 +62,7 @@ describe("Encrypt/Decrypt text routes", function() {
       // given
 
       // when
-      const response = await request
+      const response = await authRequest
         .post("/do-encrypt-text")
         .type("form")
         .send({ text: "xxx", key: "12345678" });
@@ -73,7 +78,7 @@ describe("Encrypt/Decrypt text routes", function() {
   describe(`POST /do-decrypt-text`, function() {
     it("should get an error when trying to decrypt text with the wrong key", async function() {
       // given
-      const r1 = await request
+      const r1 = await authRequest
         .post("/do-encrypt-text")
         .type("form")
         .send({ text: "yoyo ma", key: "12345678" });
@@ -81,7 +86,7 @@ describe("Encrypt/Decrypt text routes", function() {
       const encryptedText = getResult(r1.text);
 
       // when
-      const response = await request
+      const response = await authRequest
         .post("/do-decrypt-text")
         .type("form")
         .send({ text: encryptedText, key: "abcdefghijklmnop" });
@@ -94,7 +99,7 @@ describe("Encrypt/Decrypt text routes", function() {
 
     it("should decrypt text", async function() {
       // given
-      const r1 = await request
+      const r1 = await authRequest
         .post("/do-encrypt-text")
         .type("form")
         .send({ text: "yoyo ma", key: "12345678" });
@@ -102,7 +107,7 @@ describe("Encrypt/Decrypt text routes", function() {
       const encryptedText = getResult(r1.text);
 
       // when
-      const response = await request
+      const response = await authRequest
         .post("/do-decrypt-text")
         .type("form")
         .send({ text: encryptedText, key: "12345678" });

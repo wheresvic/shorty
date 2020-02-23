@@ -7,6 +7,11 @@ const encryptTextGet = function(req, res) {
 };
 
 const doEncryptTextPost = function(req, res) {
+  if (!req.renderData.username) {
+    res.redirect("/");
+    return;
+  }
+  
   const { key, text } = req.body;
 
   let result = "";
@@ -22,6 +27,11 @@ const doEncryptTextPost = function(req, res) {
 };
 
 const doDecryptTextPost = function(req, res) {
+  if (!req.renderData.username) {
+    res.redirect("/");
+    return;
+  }
+  
   const { key, text } = req.body;
 
   let result = "";
