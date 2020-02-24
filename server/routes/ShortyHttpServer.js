@@ -22,10 +22,7 @@ class ShortyHttpServer {
   constructor(ic, db) {
     ic.logger.info("Shorty server running in " + ic.env);
 
-    const lastUpdated = moment.unix(ic.lastUpdated).fromNow();
-
     const globalRenderData = {
-      lastUpdated,
       version: ic.version
     };
 
@@ -59,7 +56,8 @@ class ShortyHttpServer {
     auth(ic);
 
     server.use(function(req, res, next) {
-      req.renderData = { ...globalRenderData, username: null };
+      const lastUpdated = moment.unix(ic.lastUpdated).fromNow();
+      req.renderData = { ...globalRenderData, lastUpdated, username: null };
 
       if (req.user) {
         req.renderData.username = req.user.username;
