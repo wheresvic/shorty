@@ -44,8 +44,10 @@ class ShortyHttpServer {
     server.set("view engine", "mst");
     server.set("views", path.join(__dirname, "..", "views"));
 
-    server.use(helmet());
-
+    server.use(helmet({
+      contentSecurityPolicy: false,
+    }));
+    
     server.use(session(sessionOptions));
     server.use(bodyParser.urlencoded({ extended: true }));
 

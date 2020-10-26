@@ -1,11 +1,12 @@
-const generate = require("nanoid/generate");
+const { customAlphabet } = require("nanoid");
 
 const createShortLink = function(appUrl, id) {
   return appUrl + "/to/" + id;
 };
 
 const getShortLinkObj = function(appUrl) {
-  const id = generate("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890", 6);
+  const nanoid = customAlphabet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890", 6);
+  const id = nanoid();
 
   return {
     shortLink: createShortLink(appUrl, id),
