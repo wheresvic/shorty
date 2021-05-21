@@ -175,7 +175,6 @@ class ShortyHttpServer {
         }
 
         const userLinks = await getUserLinkDetails(db, req.renderData.username);
-        console.log(userLinks);
         for (const link of userLinks) {
           link.when = DateTime.fromSeconds(link.when).toRelative();
         }
