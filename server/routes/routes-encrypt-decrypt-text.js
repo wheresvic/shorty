@@ -1,4 +1,4 @@
-const moment = require("moment");
+const { DateTime } = require("luxon");
 
 const cryptoUtil = require("../util/crypto-util");
 
@@ -23,7 +23,7 @@ const doEncryptTextPost = function(req, res) {
     req.renderData.notification = { message: "Error " + err.message, type: "error" };
   }
 
-  res.render("encrypt-decrypt-text", { result, when: moment().format("YYYY-MM-DD HH:mm:ss"), ...req.renderData });
+  res.render("encrypt-decrypt-text", { result, when: DateTime.now().toISO(), ...req.renderData });
 };
 
 const doDecryptTextPost = function(req, res) {
@@ -43,7 +43,7 @@ const doDecryptTextPost = function(req, res) {
     req.renderData.notification = { message: "Error " + err.message, type: "error" };
   }
 
-  res.render("encrypt-decrypt-text", { result, when: moment().format("YYYY-MM-DD HH:mm:ss"), ...req.renderData });
+  res.render("encrypt-decrypt-text", { result, when: DateTime.now().toISO(), ...req.renderData });
 };
 
 module.exports = {

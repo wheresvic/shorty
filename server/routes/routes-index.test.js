@@ -1,9 +1,9 @@
 const { expect } = require("chai");
 const supertest = require("supertest");
 const cheerio = require("cheerio");
-const moment = require("moment");
 
 const testUtil = require("../util/test-util");
+const { DateTime } = require("luxon");
 
 describe("Index routes", function() {
   let server = null;
@@ -95,7 +95,7 @@ describe("Index routes", function() {
 
     it("should shorten a link", async function() {
       // given
-      const now = moment().unix();
+      const now = DateTime.now().toSeconds();
 
       const authRequest = supertest.agent(url);
       const r1 = await testUtil.login(ic, authRequest);
@@ -137,7 +137,7 @@ describe("Index routes", function() {
 
     it("should shorten a link when a shortLinkId is provided", async function() {
       // given
-      const now = moment().unix();
+      const now = DateTime.now().toSeconds();
       const shortLinkId = "abc";
 
       const authRequest = supertest.agent(url);
@@ -178,7 +178,7 @@ describe("Index routes", function() {
 
     it("should shorten a link with a random id when a blank shortLinkId is provided", async function() {
       // given
-      const now = moment().unix();
+      const now = DateTime.now().toSeconds();
       const shortLinkId = " ";
 
       const authRequest = supertest.agent(url);

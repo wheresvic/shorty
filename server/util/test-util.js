@@ -1,10 +1,10 @@
 const supertest = require("supertest");
 const Chance = require("chance");
-const moment = require("moment");
 
 const configuration = require("../config");
 const ShortyHttpServer = require("../routes/ShortyHttpServer");
 const DbNeDB = require("../db/DbNeDB");
+const { DateTime } = require("luxon");
 
 const chance = new Chance();
 
@@ -46,7 +46,7 @@ const getRandomLinkObj = function({ link, shortLinkId, userId }) {
     shortLink: shortLinkId || shortLinkIdRnd,
     shortLinkId: shortLinkId || shortLinkIdRnd,
     userId: userId || chance.guid({}),
-    when: moment().unix(),
+    when: DateTime.now().toSeconds(),
     test: true
   };
 };

@@ -1,7 +1,6 @@
 const express = require("express");
 const helmet = require("helmet");
 const mustacheExpress = require("mustache-express");
-const moment = require("moment");
 const session = require("express-session");
 const SessionFileStore = require("session-file-store")(session);
 const bodyParser = require("body-parser");
@@ -9,6 +8,8 @@ const passport = require("passport");
 const flash = require("connect-flash");
 const path = require("path");
 const os = require("os");
+const { DateTime, Duration } = require("luxon");
+const humanizeDuration = require("humanize-duration");
 
 const { wrap, middlewareSetMimeTypeTextHtml } = require("./middleware");
 const auth = require("./auth");
@@ -60,7 +61,7 @@ class ShortyHttpServer {
     auth(ic);
 
     server.use(function (req, res, next) {
-      const lastUpdated = moment.unix(ic.lastUpdated).fromNow();
+      const lastUpdated = DateTime.fromSeconds(parseInt(ic.lastUpdated, 10)).toISO();
       req.renderData = { ...globalRenderData, lastUpdated, username: null };
 
       if (req.user) {
@@ -118,7 +119,7 @@ class ShortyHttpServer {
         let linkObj = {
           link: req.body.link ? req.body.link.trim() : "",
           userId: req.renderData.username,
-          when: moment().unix(),
+          when: DateTime.now().toSeconds(),
         };
 
         if (req.body.shortLinkId !== undefined) {
@@ -174,6 +175,11 @@ class ShortyHttpServer {
         }
 
         const userLinks = await getUserLinkDetails(db, req.renderData.username);
+        console.log(userLinks);
+        for (const link of userLinks) {
+          link.when = DateTime.fromSeconds(link.when).toRelative();
+        }
+
         res.render("links", { links: userLinks, ...req.renderData });
       })
     );
@@ -301,12 +307,13 @@ const shortenLink = async function (ic, db, linkObj) {
 };
 
 const getStats = async function (db) {
-  const duration = moment.duration(os.uptime() * 1000);
-
+  // const duration = moment.duration(os.uptime() * 1000);
+  // const duration = Duration.fromMillis(os.uptime() * 1000);
+  
   return {
     numLinks: await db.linkCount(),
     numClicks: await db.clickCount(),
-    uptime: duration.humanize(),
+    uptime: humanizeDuration(os.uptime(), {round: true}),
   };
 };
 

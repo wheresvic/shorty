@@ -1,7 +1,6 @@
 const { expect } = require("chai");
 const supertest = require("supertest");
 const cheerio = require("cheerio");
-const moment = require("moment");
 
 const testUtil = require("../util/test-util");
 
