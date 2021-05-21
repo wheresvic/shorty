@@ -59,13 +59,16 @@
 
                 {{#links}}
                 <div class="columns is-mobile is-vcentered">
-                  <div class="column is-2">
+                  <div class="column is-3">
                     <a href="{{ shortLink }}">{{ shortLinkId }}</a>
                   </div>
-                  <div class="column is-7">
+                  <div class="column is-6">
                     <a href="{{ shortLink }}">{{ link }}</a>
                   </div>
-                  <div class="column has-text-centered is-2">
+                  <div class="column has-text-centered is-1">
+                    {{ when }}
+                  </div>
+                  <div class="column has-text-centered is-1">
                     {{ clickCount }}
                   </div>
                   <div class="column has-text-centered is-1">

@@ -23,14 +23,14 @@ class ShortyHttpServer {
     ic.logger.info("Shorty server running in " + ic.env);
 
     const globalRenderData = {
-      version: ic.version
+      version: ic.version,
     };
 
     const sessionOptions = {
       secret: ic.sessionSecret,
       resave: false,
       saveUninitialized: false,
-      cookie: { maxAge: 3 * 3600 * 1000 }
+      cookie: { maxAge: 3 * 3600 * 1000 },
     };
 
     if (ic.env === "development") {
@@ -44,10 +44,12 @@ class ShortyHttpServer {
     server.set("view engine", "mst");
     server.set("views", path.join(__dirname, "..", "views"));
 
-    server.use(helmet({
-      contentSecurityPolicy: false,
-    }));
-    
+    server.use(
+      helmet({
+        contentSecurityPolicy: false,
+      })
+    );
+
     server.use(session(sessionOptions));
     server.use(bodyParser.urlencoded({ extended: true }));
 
@@ -57,7 +59,7 @@ class ShortyHttpServer {
 
     auth(ic);
 
-    server.use(function(req, res, next) {
+    server.use(function (req, res, next) {
       const lastUpdated = moment.unix(ic.lastUpdated).fromNow();
       req.renderData = { ...globalRenderData, lastUpdated, username: null };
 
@@ -68,14 +70,14 @@ class ShortyHttpServer {
       next();
     });
 
-    const middlewareStats = function(req, res, next) {
+    const middlewareStats = function (req, res, next) {
       try {
         getStats(db)
-          .then(stats => {
+          .then((stats) => {
             req.renderData = { ...req.renderData, ...stats };
             next();
           })
-          .catch(err => {
+          .catch((err) => {
             next(err);
           });
       } catch (err) {
@@ -91,7 +93,7 @@ class ShortyHttpServer {
     // get the main page
     // in case there was a login attempt, display a notification (due to redirection)
     //
-    server.get("/", middlewareSetMimeTypeTextHtml, middlewareStats, function(req, res) {
+    server.get("/", middlewareSetMimeTypeTextHtml, middlewareStats, function (req, res) {
       const errorMessage = req.flash("error")[0];
       if (errorMessage) {
         req.renderData.notification = { message: errorMessage, type: "error" };
@@ -112,11 +114,11 @@ class ShortyHttpServer {
       "/",
       middlewareSetMimeTypeTextHtml,
       middlewareStats,
-      wrap(async function(req, res) {
+      wrap(async function (req, res) {
         let linkObj = {
           link: req.body.link ? req.body.link.trim() : "",
           userId: req.renderData.username,
-          when: moment().unix()
+          when: moment().unix(),
         };
 
         if (req.body.shortLinkId !== undefined) {
@@ -135,7 +137,7 @@ class ShortyHttpServer {
               linkObj = await shortenLink(ic, db, linkObj);
               req.renderData.notification = {
                 message: "Successfully shortened link: " + linkObj.link,
-                type: "success"
+                type: "success",
               };
             } catch (e) {
               req.renderData.notification = { message: e.message, type: "error" };
@@ -165,7 +167,7 @@ class ShortyHttpServer {
     server.get(
       "/links",
       middlewareSetMimeTypeTextHtml,
-      wrap(async function(req, res) {
+      wrap(async function (req, res) {
         if (!req.renderData.username) {
           res.redirect("/");
           return;
@@ -183,7 +185,7 @@ class ShortyHttpServer {
     server.post(
       "/links",
       middlewareSetMimeTypeTextHtml,
-      wrap(async function(req, res) {
+      wrap(async function (req, res) {
         if (!req.renderData.username) {
           res.redirect("/");
           return;
@@ -204,13 +206,13 @@ class ShortyHttpServer {
 
     server.get(
       "/to/:shortLinkId",
-      wrap(async function(req, res) {
+      wrap(async function (req, res) {
         const linkObj = await db.linkGetByShortLinkId(req.params.shortLinkId);
 
         if (linkObj) {
           const clickObj = {
             ...linkObj,
-            when: new Date().getTime()
+            when: new Date().getTime(),
           };
 
           delete clickObj._id;
@@ -241,7 +243,7 @@ class ShortyHttpServer {
       passport.authenticate("local", { successRedirect: "/", failureRedirect: "/", failureFlash: true })
     );
 
-    server.get("/logout", function(req, res) {
+    server.get("/logout", function (req, res) {
       req.logout();
       res.redirect("/");
     });
@@ -256,13 +258,13 @@ class ShortyHttpServer {
     // 404
     //
 
-    server.use(function(req, res) {
+    server.use(function (req, res) {
       res.status(404).send();
     });
 
     if (ic.env === "production") {
       // no stack traces in production
-      server.use(function(err, req, res, next) {
+      server.use(function (err, req, res, next) {
         console.error(err.stack);
         res.status(500).send("Something broke!");
       });
@@ -280,7 +282,7 @@ class ShortyHttpServer {
   }
 }
 
-const shortenLink = async function(ic, db, linkObj) {
+const shortenLink = async function (ic, db, linkObj) {
   if (linkObj.shortLinkId) {
     const found = await db.linkGetByShortLinkId(linkObj.shortLinkId);
     if (found) {
@@ -298,17 +300,17 @@ const shortenLink = async function(ic, db, linkObj) {
   return doc;
 };
 
-const getStats = async function(db) {
+const getStats = async function (db) {
   const duration = moment.duration(os.uptime() * 1000);
 
   return {
     numLinks: await db.linkCount(),
     numClicks: await db.clickCount(),
-    uptime: duration.humanize()
+    uptime: duration.humanize(),
   };
 };
 
-const getUserLinkDetails = async function(db, userId) {
+const getUserLinkDetails = async function (db, userId, sort = "DESC") {
   const userLinks = await db.linkGetByUserId(userId);
   const userClicks = await db.clickGetByUserId(userId);
 
@@ -323,6 +325,14 @@ const getUserLinkDetails = async function(db, userId) {
   for (const click of userClicks) {
     linkMap[click.shortLinkId].clickCount++;
   }
+
+  userLinks.sort((a, b) => {
+    if (sort === "DESC") {
+      return b.when - a.when;
+    }
+
+    return a.when - b.when;
+  });
 
   // note that references are the same so can reuse existing array :)
   return userLinks;
