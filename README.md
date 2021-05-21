@@ -10,6 +10,10 @@ Currently, shorty comes with only set of credentials and is meant to be a _priva
 
 Before starting shorty, make sure that you copy `.env.dist` to `.env` and fill in the configuration as desired.
 
+![Shorty main page](shorty-main-page.png)
+
+![Shorty links](shorty-links.png)
+
 ## tech stack
 
 Shorty is fully server-side rendered web application powered by Node.js. The following is a selection of the modules in use:
