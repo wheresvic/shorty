@@ -308,11 +308,12 @@ const shortenLink = async function (ic, db, linkObj) {
 const getStats = async function (db) {
   // const duration = moment.duration(os.uptime() * 1000);
   // const duration = Duration.fromMillis(os.uptime() * 1000);
-  
+  const uptime = humanizeDuration(os.uptime() * 1000, { largest: 2, round: true });
+
   return {
     numLinks: await db.linkCount(),
     numClicks: await db.clickCount(),
-    uptime: humanizeDuration(os.uptime(), {round: true}),
+    uptime,
   };
 };
 
