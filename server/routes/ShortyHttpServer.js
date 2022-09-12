@@ -175,11 +175,9 @@ class ShortyHttpServer {
         }
 
         const userLinks = await getUserLinkDetails(db, req.renderData.username);
-        for (const link of userLinks) {
-          link.when = DateTime.fromSeconds(link.when).toRelative();
-        }
+        const userLinksRender = getRenderLinks(userLinks);
 
-        res.render("links", { links: userLinks, ...req.renderData });
+        res.render("links", { links: userLinksRender, ...req.renderData });
       })
     );
 
@@ -201,7 +199,8 @@ class ShortyHttpServer {
         req.renderData.notification = { message: "Successfully deleted link " + req.body.link, type: "success" };
 
         const userLinks = await getUserLinkDetails(db, req.renderData.username);
-        res.render("links", { links: userLinks, ...req.renderData });
+        const userLinksRender = getRenderLinks(userLinks);
+        res.render("links", { links: userLinksRender, ...req.renderData });
       })
     );
 
@@ -342,6 +341,13 @@ const getUserLinkDetails = async function (db, userId, sort = "DESC") {
   });
 
   // note that references are the same so can reuse existing array :)
+  return userLinks;
+};
+
+const getRenderLinks = function (userLinks) {
+  for (const link of userLinks) {
+    link.when = DateTime.fromSeconds(link.when).toRelative();
+  }
   return userLinks;
 };
 
