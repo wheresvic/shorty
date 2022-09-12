@@ -27,10 +27,10 @@
     "bulma": "0.9.4",
     "chance": "1.1.8",
     "connect-flash": "0.1.1",
-    "dotenv": "9.0.2",
+    "dotenv": "16.0.2",
     "express": "4.18.1",
-    "express-rate-limit": "5.2.6",
-    "express-session": "1.17.2",
+    "express-rate-limit": "6.6.0",
+    "express-session": "1.17.3",
     "helmet": "4.6.0",
     "humanize-duration": "3.27.3",
     "luxon": "1.27.0",
@@ -52,7 +52,7 @@
     "node-sass": "7.0.3",
     "nodemon": "2.0.19",
     "nyc": "15.1.0",
-    "release-it": "14.6.2",
+    "release-it": "15.4.1",
     "supertest": "6.2.4"
   },
   "mocha": {
