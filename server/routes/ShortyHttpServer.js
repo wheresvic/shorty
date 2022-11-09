@@ -16,17 +16,18 @@ const auth = require("./auth");
 const linkSchema = require("../schemas/link");
 const { generateShortLinkObj, createShortLink } = require("../util/link-util");
 const routesEncryptDecryptText = require("./routes-encrypt-decrypt-text");
+const { filter } = require("domutils");
 
 // TODO: cache?
 
 // these need to have a solid fontawesome icon associated with them: `fas fa-download`
 const Category = Object.freeze({
-  download: "download",
-  bookmark: "bookmark",
+  download: { name: "download", icon: "download" },
+  bookmark: { name: "bookmark", icon: "bookmark" },
 });
 
 const categoryOptions = Object.values(Category).map((v) => {
-  return { category: v };
+  return { category: v.name, icon: v.icon };
 });
 
 class ShortyHttpServer {
@@ -113,7 +114,7 @@ class ShortyHttpServer {
       }
 
       // console.log(req.renderData);
-      res.render("index", { ...req.renderData, categoryOptions, firstCategoryOption: categoryOptions[0].category });
+      res.render("index", { ...req.renderData, categoryOptions, firstCategoryIcon: categoryOptions[0].icon });
     });
 
     //
@@ -126,7 +127,7 @@ class ShortyHttpServer {
         link: req.body.link ? req.body.link.trim() : "",
         userId: req.renderData.username,
         when: DateTime.now().toSeconds(),
-        category: req.body.category || Category.download,
+        category: req.body.category || Category.download.name,
       };
 
       if (req.body.shortLinkId !== undefined) {
@@ -164,11 +165,11 @@ class ShortyHttpServer {
       req.renderData = Object.assign(req.renderData, linkObj);
 
       // console.log(req.renderData);
-      res.render("index", { ...req.renderData, categoryOptions, firstCategoryOption: categoryOptions[0].category });
+      res.render("index", { ...req.renderData, categoryOptions, firstCategoryIcon: categoryOptions[0].icon });
     });
 
     //
-    // profile
+    // links
     //
 
     server.get("/links", middlewareSetMimeTypeTextHtml, async function (req, res) {
@@ -177,10 +178,7 @@ class ShortyHttpServer {
         return;
       }
 
-      const userLinks = await getUserLinkDetails(db, req.renderData.username);
-      const userLinksRender = getRenderLinks(userLinks);
-
-      res.render("links", { links: userLinksRender, ...req.renderData });
+      await viewLinks(req, res, db);
     });
 
     //
@@ -197,9 +195,7 @@ class ShortyHttpServer {
       await db.clickRemoveByShortLinkId(req.body.shortLinkId);
       req.renderData.notification = { message: "Successfully deleted link " + req.body.link, type: "success" };
 
-      const userLinks = await getUserLinkDetails(db, req.renderData.username);
-      const userLinksRender = getRenderLinks(userLinks);
-      res.render("links", { links: userLinksRender, ...req.renderData });
+      await viewLinks(req, res, db);
     });
 
     //
@@ -311,13 +307,16 @@ const getStats = async function (db) {
   };
 };
 
-const getUserLinkDetails = async function (db, userId, sort = "DESC") {
+const getUserLinkDetails = async function (db, userId, filterCategory, sort = "DESC") {
   const userLinks = await db.linkGetByUserId(userId);
   const userClicks = await db.clickGetByUserId(userId);
 
+  const filteredLinks =
+    filterCategory !== "all" ? userLinks.filter((link) => link.category === filterCategory) : userLinks;
+
   const linkMap = {};
 
-  for (const link of userLinks) {
+  for (const link of filteredLinks) {
     link.clickCount = 0;
     linkMap[link.shortLinkId] = link;
     linkMap[link.shortLinkId];
@@ -327,7 +326,7 @@ const getUserLinkDetails = async function (db, userId, sort = "DESC") {
     linkMap[click.shortLinkId].clickCount++;
   }
 
-  userLinks.sort((a, b) => {
+  filteredLinks.sort((a, b) => {
     if (sort === "DESC") {
       return b.when - a.when;
     }
@@ -336,7 +335,22 @@ const getUserLinkDetails = async function (db, userId, sort = "DESC") {
   });
 
   // note that references are the same so can reuse existing array :)
-  return userLinks;
+  return filteredLinks;
+};
+
+const viewLinks = async function (req, res, db) {
+  const reqCategory = req.query.category || "all";
+
+  const userLinks = await getUserLinkDetails(db, req.renderData.username, reqCategory);
+  const userLinksRender = getRenderLinks(userLinks);
+
+  res.render("links", {
+    links: userLinksRender,
+    selectCategoryId: "links-select-category",
+    categoryOptions: getLinksCategoryOptions(reqCategory),
+    firstCategoryIcon: Category[reqCategory] ? Category[reqCategory].icon : "globe",
+    ...req.renderData,
+  });
 };
 
 const getRenderLinks = function (userLinks) {
@@ -344,6 +358,15 @@ const getRenderLinks = function (userLinks) {
     link.when = DateTime.fromSeconds(link.when).toRelative();
   }
   return userLinks;
+};
+
+const getLinksCategoryOptions = function (reqCategory) {
+  const linksCategoryOptions = [{ category: "all", icon: "globe" }, ...categoryOptions];
+  linksCategoryOptions.forEach((categoryOption) => {
+    categoryOption.selected = categoryOption.category === reqCategory;
+  });
+
+  return linksCategoryOptions;
 };
 
 /*

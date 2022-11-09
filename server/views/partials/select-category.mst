@@ -1,0 +1,15 @@
+<div class="field">
+  <div class="control has-icons-left">
+    <div class="select">
+      <select id="{{ selectCategoryId }}" class="select-category" name="category">
+        {{#categoryOptions}}
+        <option value="{{ category }}" icon="{{ icon }}" {{#selected}}selected="selected"{{/selected}}>{{ category }}
+        </option>
+        {{/categoryOptions}}
+      </select>
+      <div class="select-category-icon icon is-left">
+        <i class="fas fa-{{ firstCategoryIcon }}"></i>
+      </div>
+    </div>
+  </div>
+</div>

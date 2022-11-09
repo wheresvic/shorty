@@ -45,7 +45,7 @@ const getRandomLinkObj = function ({ link, shortLinkId, userId }) {
     userId: userId || chance.guid({}),
     when: DateTime.now().toSeconds(),
     test: true,
-    category: Category.download,
+    category: Category.download.name,
   };
 };
 

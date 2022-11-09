@@ -48,11 +48,17 @@
                 </div>
                 -->
 
+              <div class="columns mb-2">
+                <div class="column has-text-centered">
+                  {{> partials/select-category}}
+                </div>
+              </div>
+
               {{^links}}
               <div class="columns is-centered">
                 <div class="column is-6">
-                  <div class="notification">
-                    No links stored yet!
+                  <div class="notification is-warning">
+                    No links found!
                   </div>
                 </div>
               </div>

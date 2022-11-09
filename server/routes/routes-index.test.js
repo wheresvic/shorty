@@ -43,7 +43,7 @@ describe("Index routes", function () {
   describe(`POST /`, function () {
     it("should get an error when trying to shorten a link when not logged in", async function () {
       // when
-      const response = await request.post("/").send({ link: "bloo", category: Category.download });
+      const response = await request.post("/").send({ link: "bloo", category: Category.download.name });
 
       // then
       expect(response.text.includes("Need to be logged in to perform this action!")).to.be.true;
@@ -101,7 +101,7 @@ describe("Index routes", function () {
       // console.log(r2.text); // actual content
 
       // when
-      const response = await authRequest.post("/").type("form").send({ link: "test", category: Category.download });
+      const response = await authRequest.post("/").type("form").send({ link: "test", category: Category.download.name });
 
       // then
 
@@ -125,7 +125,7 @@ describe("Index routes", function () {
         userId: ic.appUsername,
         shortLink,
         shortLinkId,
-        category: Category.download,
+        category: Category.download.name,
       });
     });
 
@@ -145,7 +145,7 @@ describe("Index routes", function () {
       const response = await authRequest
         .post("/")
         .type("form")
-        .send({ link: "test", shortLinkId, category: Category.bookmark });
+        .send({ link: "test", shortLinkId, category: Category.bookmark.name });
 
       // then
 
@@ -167,7 +167,7 @@ describe("Index routes", function () {
         userId: ic.appUsername,
         shortLink,
         shortLinkId,
-        category: Category.bookmark,
+        category: Category.bookmark.name,
       });
     });
 
@@ -187,7 +187,7 @@ describe("Index routes", function () {
       const response = await authRequest
         .post("/")
         .type("form")
-        .send({ link: "test7", shortLinkId, category: Category.download });
+        .send({ link: "test7", shortLinkId, category: Category.download.name });
 
       // then
 
@@ -211,7 +211,7 @@ describe("Index routes", function () {
         userId: ic.appUsername,
         shortLink,
         shortLinkId: rShortLinkId,
-        category: Category.download,
+        category: Category.download.name,
       });
     });
 

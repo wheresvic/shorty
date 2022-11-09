@@ -16,7 +16,7 @@ describe("link schema", function () {
 
   it("should validate link when no shortLink provided", function () {
     // given
-    const linkObj = testUtil.getRandomLinkObj({ category: Category.download });
+    const linkObj = testUtil.getRandomLinkObj({ category: Category.download.name });
     delete linkObj.shortLink;
 
     // when

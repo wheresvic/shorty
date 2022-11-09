@@ -16,20 +16,7 @@
 
   <div class="columms is-mobile">
     <div class="column is-6-tablet is-offset-3-tablet">
-      <div class="control has-icons-left">
-
-        <div class="select">
-          <select id="select-category" name="category">
-            {{#categoryOptions}}
-            <option value="{{ category }}">{{ category }}</option>
-            {{/categoryOptions}}
-          </select>
-          <div id="select-category-icon" class="icon is-left">
-            <i class="fas fa-{{ firstCategoryOption }}"></i>
-          </div>
-        </div>
-
-      </div>
+      {{> partials/select-category}}
     </div>
   </div>
 
