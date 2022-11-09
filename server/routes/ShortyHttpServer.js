@@ -323,7 +323,9 @@ const getUserLinkDetails = async function (db, userId, filterCategory, sort = "D
   }
 
   for (const click of userClicks) {
-    linkMap[click.shortLinkId].clickCount++;
+    if (linkMap[click.shortLinkId]) {
+      linkMap[click.shortLinkId].clickCount++;
+    }
   }
 
   filteredLinks.sort((a, b) => {
