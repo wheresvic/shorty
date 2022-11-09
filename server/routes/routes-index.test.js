@@ -4,15 +4,16 @@ const cheerio = require("cheerio");
 
 const testUtil = require("../util/test-util");
 const { DateTime } = require("luxon");
+const { Category } = require("./ShortyHttpServer");
 
-describe("Index routes", function() {
+describe("Index routes", function () {
   let server = null;
   let request = null;
   let ic = null;
   let url = null;
   let db = null;
 
-  before(async function() {
+  before(async function () {
     const result = await testUtil.routeTestSetup();
     server = result.server;
     request = result.request;
@@ -21,46 +22,41 @@ describe("Index routes", function() {
     db = result.db;
   });
 
-  after(async function() {
+  after(async function () {
     await testUtil.routeTestTeardown(server, db);
   });
 
-  describe(`GET /`, function() {
-    it("should get the index page with login enabled", async function() {
+  describe(`GET /`, function () {
+    it("should get the index page with login enabled", async function () {
       // when
       const response = await request.get("/");
       // console.log(response.text);
 
       // then
       const $ = cheerio.load(response.text);
-      const loginButtonText = $("#login")
-        .text()
-        .trim();
+      const loginButtonText = $("#login").text().trim();
 
       expect(loginButtonText).to.equal("Login");
     });
   });
 
-  describe(`POST /`, function() {
-    it("should get an error when trying to shorten a link when not logged in", async function() {
+  describe(`POST /`, function () {
+    it("should get an error when trying to shorten a link when not logged in", async function () {
       // when
-      const response = await request.post("/").send({ link: "bloo" });
+      const response = await request.post("/").send({ link: "bloo", category: Category.download });
 
       // then
       expect(response.text.includes("Need to be logged in to perform this action!")).to.be.true;
       expect(getShortLinkHref(response.text)).to.be.undefined;
     });
 
-    it("should get an error when trying to shorten an empty link", async function() {
+    it("should get an error when trying to shorten an empty link", async function () {
       // given
       const authRequest = supertest.agent(url);
       await testUtil.login(ic, authRequest);
 
       // when
-      const response = await authRequest
-        .post("/")
-        .type("form")
-        .send({ link: "" });
+      const response = await authRequest.post("/").type("form").send({ link: "" });
 
       // then
       // console.log(response.text);
@@ -69,7 +65,7 @@ describe("Index routes", function() {
       expect(getShortLinkHref(response.text)).to.be.undefined;
     });
 
-    it("should get an error when trying to shorten a link greater than 4096 characters", async function() {
+    it("should get an error when trying to shorten a link greater than 4096 characters", async function () {
       // given
       const authRequest = supertest.agent(url);
       const r1 = await testUtil.login(ic, authRequest);
@@ -93,7 +89,7 @@ describe("Index routes", function() {
       expect(getShortLinkHref(response.text)).to.be.undefined;
     });
 
-    it("should shorten a link", async function() {
+    it("should shorten a link", async function () {
       // given
       const now = DateTime.now().toSeconds();
 
@@ -105,10 +101,7 @@ describe("Index routes", function() {
       // console.log(r2.text); // actual content
 
       // when
-      const response = await authRequest
-        .post("/")
-        .type("form")
-        .send({ link: "test" });
+      const response = await authRequest.post("/").type("form").send({ link: "test", category: Category.download });
 
       // then
 
@@ -131,11 +124,12 @@ describe("Index routes", function() {
         link: "test",
         userId: ic.appUsername,
         shortLink,
-        shortLinkId
+        shortLinkId,
+        category: Category.download,
       });
     });
 
-    it("should shorten a link when a shortLinkId is provided", async function() {
+    it("should shorten a link when a shortLinkId is provided", async function () {
       // given
       const now = DateTime.now().toSeconds();
       const shortLinkId = "abc";
@@ -151,7 +145,7 @@ describe("Index routes", function() {
       const response = await authRequest
         .post("/")
         .type("form")
-        .send({ link: "test", shortLinkId });
+        .send({ link: "test", shortLinkId, category: Category.bookmark });
 
       // then
 
@@ -172,11 +166,12 @@ describe("Index routes", function() {
         link: "test",
         userId: ic.appUsername,
         shortLink,
-        shortLinkId
+        shortLinkId,
+        category: Category.bookmark,
       });
     });
 
-    it("should shorten a link with a random id when a blank shortLinkId is provided", async function() {
+    it("should shorten a link with a random id when a blank shortLinkId is provided", async function () {
       // given
       const now = DateTime.now().toSeconds();
       const shortLinkId = " ";
@@ -192,7 +187,7 @@ describe("Index routes", function() {
       const response = await authRequest
         .post("/")
         .type("form")
-        .send({ link: "test7", shortLinkId });
+        .send({ link: "test7", shortLinkId, category: Category.download });
 
       // then
 
@@ -215,11 +210,12 @@ describe("Index routes", function() {
         link: "test7",
         userId: ic.appUsername,
         shortLink,
-        shortLinkId: rShortLinkId
+        shortLinkId: rShortLinkId,
+        category: Category.download,
       });
     });
 
-    it("should throw an error when trying to shorten a link with a duplicate shortLinkId", async function() {
+    it("should throw an error when trying to shorten a link with a duplicate shortLinkId", async function () {
       // given
       const link = testUtil.getRandomLinkObj({});
       await db.linkAdd(link);
@@ -232,10 +228,7 @@ describe("Index routes", function() {
       // console.log(r2.text); // actual content
 
       // when
-      const response = await authRequest
-        .post("/")
-        .type("form")
-        .send({ link: "test2", shortLinkId: link.shortLinkId });
+      const response = await authRequest.post("/").type("form").send({ link: "test2", shortLinkId: link.shortLinkId });
 
       // then
 

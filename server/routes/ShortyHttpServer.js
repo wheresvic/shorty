@@ -19,6 +19,16 @@ const routesEncryptDecryptText = require("./routes-encrypt-decrypt-text");
 
 // TODO: cache?
 
+// these need to have a solid fontawesome icon associated with them: `fas fa-download`
+const Category = Object.freeze({
+  download: "download",
+  bookmark: "bookmark",
+});
+
+const categoryOptions = Object.values(Category).map((v) => {
+  return { category: v };
+});
+
 class ShortyHttpServer {
   constructor(ic, db) {
     ic.logger.info("Shorty server running in " + ic.env);
@@ -103,7 +113,7 @@ class ShortyHttpServer {
       }
 
       // console.log(req.renderData);
-      res.render("index", { ...req.renderData });
+      res.render("index", { ...req.renderData, categoryOptions, firstCategoryOption: categoryOptions[0].category });
     });
 
     //
@@ -116,6 +126,7 @@ class ShortyHttpServer {
         link: req.body.link ? req.body.link.trim() : "",
         userId: req.renderData.username,
         when: DateTime.now().toSeconds(),
+        category: req.body.category || Category.download,
       };
 
       if (req.body.shortLinkId !== undefined) {
@@ -153,7 +164,7 @@ class ShortyHttpServer {
       req.renderData = Object.assign(req.renderData, linkObj);
 
       // console.log(req.renderData);
-      res.render("index", { ...req.renderData });
+      res.render("index", { ...req.renderData, categoryOptions, firstCategoryOption: categoryOptions[0].category });
     });
 
     //
@@ -348,4 +359,4 @@ function format(seconds) {
 }
 */
 
-module.exports = ShortyHttpServer;
+module.exports = { ShortyHttpServer, Category };

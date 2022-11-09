@@ -52,6 +52,13 @@
         }
         */
       });
+
+      $("#select-category").change(function(e) {
+        const selectedValue = this.value;
+        $("#select-category-icon").children().remove();
+        $("#select-category-icon").append(`<i class="fas fa-${selectedValue}"></i>`);
+      });
+
     });
   </script>
 

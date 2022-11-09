@@ -1,56 +1,56 @@
 <!DOCTYPE html>
 <html>
-  {{> partials/head}}
+{{> partials/head}}
 
-  <body>
-    <div id="main-content-container">
-      {{> partials/navbar}}
-      <div id="main-content">
-        <section class="hero is-light">
-          <div class="hero-body">
-            <div class="container has-text-centered">
-              <h1 class="title m-t-2">
-                <span class="is-size-2 has-text-centered is-block">
-                  {{^shortLink}}
-                  Shorten urls like a pro.
-                  {{/shortLink}}
-                  {{#shortLink}}
-                  <a id="short-link" class="link-underlined" href="{{ shortLink }}">{{ shortLink }}</a>
-                  {{/shortLink}}
-                </span>
-              </h1>
+<body>
+  <div id="main-content-container">
+    {{> partials/navbar}}
+    <div id="main-content">
+      <section class="hero is-light">
+        <div class="hero-body">
+          <div class="container has-text-centered">
+            <h1 class="title m-t-2">
+              <span class="is-size-2 has-text-centered is-block">
+                {{^shortLink}}
+                Shorten urls like a pro.
+                {{/shortLink}}
+                {{#shortLink}}
+                <a id="short-link" class="link-underlined" href="{{ shortLink }}">{{ shortLink }}</a>
+                {{/shortLink}}
+              </span>
+            </h1>
 
-              <div class="columns m-t-3 m-b-2">
-                <div class="column is-8-desktop is-offset-2-desktop">
-                  {{> partials/shorten-link-form}}
-                </div>
+            <div class="columns m-t-3 m-b-2">
+              <div class="column is-8-desktop is-offset-2-desktop">
+                {{> partials/shorten-link-form}}
               </div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section class="section ">
-          <div class="container background-result">
-            <nav class="level">
-              <div class="level-item has-text-centered">
-                <div>
-                  <p class="heading">Links</p>
-                  <p class="title">{{ numLinks }}</p>
-                </div>
+      <section class="section ">
+        <div class="container background-result">
+          <nav class="level">
+            <div class="level-item has-text-centered">
+              <div>
+                <p class="heading">Links</p>
+                <p class="title">{{ numLinks }}</p>
               </div>
-              <div class="level-item has-text-centered">
-                <div>
-                  <p class="heading">Clicks</p>
-                  <p class="title">{{ numClicks }}</p>
-                </div>
+            </div>
+            <div class="level-item has-text-centered">
+              <div>
+                <p class="heading">Clicks</p>
+                <p class="title">{{ numClicks }}</p>
               </div>
-              <div class="level-item has-text-centered">
-                <div>
-                  <p class="heading">Uptime</p>
-                  <p class="title">{{ uptime }}</p>
-                </div>
+            </div>
+            <div class="level-item has-text-centered">
+              <div>
+                <p class="heading">Uptime</p>
+                <p class="title">{{ uptime }}</p>
               </div>
-              <!--
+            </div>
+            <!--
               <div class="level-item has-text-centered">
                 <div>
                   <p class="heading">Likes</p>
@@ -58,11 +58,12 @@
                 </div>
               </div>
               -->
-            </nav>
-          </div>
-        </section>
-      </div>
-      {{> partials/footer}}
+          </nav>
+        </div>
+      </section>
     </div>
-  </body>
+    {{> partials/footer}}
+  </div>
+</body>
+
 </html>

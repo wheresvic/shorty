@@ -1,10 +1,11 @@
 const { expect } = require("chai");
+const { Category } = require("../routes/ShortyHttpServer");
 
 const testUtil = require("../util/test-util");
 const linkSchema = require("./link");
 
-describe("link schema", function() {
-  it("should throw an validation error when no link property provided", function() {
+describe("link schema", function () {
+  it("should throw an validation error when no link property provided", function () {
     // when
     const { error, value } = linkSchema.validate({});
 
@@ -13,9 +14,9 @@ describe("link schema", function() {
     expect(error.name).to.equal("ValidationError");
   });
 
-  it("should validate link when no shortLink provided", function() {
+  it("should validate link when no shortLink provided", function () {
     // given
-    const linkObj = testUtil.getRandomLinkObj({});
+    const linkObj = testUtil.getRandomLinkObj({ category: Category.download });
     delete linkObj.shortLink;
 
     // when
@@ -25,8 +26,8 @@ describe("link schema", function() {
     expect(error).to.be.undefined;
     expect(value).to.deep.equal(linkObj);
   });
-  
-  it("should validate link when all properties provided", function() {
+
+  it("should validate link when all properties provided", function () {
     // given
     const linkObj = testUtil.getRandomLinkObj({});
 
