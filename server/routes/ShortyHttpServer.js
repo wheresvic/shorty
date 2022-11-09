@@ -11,7 +11,7 @@ const os = require("os");
 const { DateTime, Duration } = require("luxon");
 const humanizeDuration = require("humanize-duration");
 
-const { wrap, middlewareSetMimeTypeTextHtml } = require("./middleware");
+const { middlewareSetMimeTypeTextHtml } = require("./middleware");
 const auth = require("./auth");
 const linkSchema = require("../schemas/link");
 const { generateShortLinkObj, createShortLink } = require("../util/link-util");
@@ -111,124 +111,108 @@ class ShortyHttpServer {
     // - check if user logged in
     // - check link validity
     //
-    server.post(
-      "/",
-      middlewareSetMimeTypeTextHtml,
-      middlewareStats,
-      wrap(async function (req, res) {
-        let linkObj = {
-          link: req.body.link ? req.body.link.trim() : "",
-          userId: req.renderData.username,
-          when: DateTime.now().toSeconds(),
-        };
+    server.post("/", middlewareSetMimeTypeTextHtml, middlewareStats, async function (req, res) {
+      let linkObj = {
+        link: req.body.link ? req.body.link.trim() : "",
+        userId: req.renderData.username,
+        when: DateTime.now().toSeconds(),
+      };
 
-        if (req.body.shortLinkId !== undefined) {
-          req.body.shortLinkId = req.body.shortLinkId.trim();
-          if (req.body.shortLinkId) {
-            linkObj.shortLinkId = req.body.shortLinkId;
-          }
+      if (req.body.shortLinkId !== undefined) {
+        req.body.shortLinkId = req.body.shortLinkId.trim();
+        if (req.body.shortLinkId) {
+          linkObj.shortLinkId = req.body.shortLinkId;
         }
+      }
 
-        if (linkObj.userId) {
-          const { error } = linkSchema.validate(linkObj);
-          if (error) {
-            req.renderData.notification = { message: error.message, type: "error" };
-          } else {
-            try {
-              linkObj = await shortenLink(ic, db, linkObj);
-              req.renderData.notification = {
-                message: "Successfully shortened link: " + linkObj.link,
-                type: "success",
-              };
-            } catch (e) {
-              req.renderData.notification = { message: e.message, type: "error" };
-            }
-          }
+      if (linkObj.userId) {
+        const { error } = linkSchema.validate(linkObj);
+        if (error) {
+          req.renderData.notification = { message: error.message, type: "error" };
         } else {
-          req.renderData.notification = { message: "Need to be logged in to perform this action!", type: "error" };
+          try {
+            linkObj = await shortenLink(ic, db, linkObj);
+            req.renderData.notification = {
+              message: "Successfully shortened link: " + linkObj.link,
+              type: "success",
+            };
+          } catch (e) {
+            req.renderData.notification = { message: e.message, type: "error" };
+          }
         }
+      } else {
+        req.renderData.notification = { message: "Need to be logged in to perform this action!", type: "error" };
+      }
 
-        /*
+      /*
         if (!req.renderData.notification) {
           
         }
         */
 
-        req.renderData = Object.assign(req.renderData, linkObj);
+      req.renderData = Object.assign(req.renderData, linkObj);
 
-        // console.log(req.renderData);
-        res.render("index", { ...req.renderData });
-      })
-    );
+      // console.log(req.renderData);
+      res.render("index", { ...req.renderData });
+    });
 
     //
     // profile
     //
 
-    server.get(
-      "/links",
-      middlewareSetMimeTypeTextHtml,
-      wrap(async function (req, res) {
-        if (!req.renderData.username) {
-          res.redirect("/");
-          return;
-        }
+    server.get("/links", middlewareSetMimeTypeTextHtml, async function (req, res) {
+      if (!req.renderData.username) {
+        res.redirect("/");
+        return;
+      }
 
-        const userLinks = await getUserLinkDetails(db, req.renderData.username);
-        const userLinksRender = getRenderLinks(userLinks);
+      const userLinks = await getUserLinkDetails(db, req.renderData.username);
+      const userLinksRender = getRenderLinks(userLinks);
 
-        res.render("links", { links: userLinksRender, ...req.renderData });
-      })
-    );
+      res.render("links", { links: userLinksRender, ...req.renderData });
+    });
 
     //
     // delete a link
     //
 
-    server.post(
-      "/links",
-      middlewareSetMimeTypeTextHtml,
-      wrap(async function (req, res) {
-        if (!req.renderData.username) {
-          res.redirect("/");
-          return;
-        }
+    server.post("/links", middlewareSetMimeTypeTextHtml, async function (req, res) {
+      if (!req.renderData.username) {
+        res.redirect("/");
+        return;
+      }
 
-        await db.linkRemoveById(req.body.linkId);
-        await db.clickRemoveByShortLinkId(req.body.shortLinkId);
-        req.renderData.notification = { message: "Successfully deleted link " + req.body.link, type: "success" };
+      await db.linkRemoveById(req.body.linkId);
+      await db.clickRemoveByShortLinkId(req.body.shortLinkId);
+      req.renderData.notification = { message: "Successfully deleted link " + req.body.link, type: "success" };
 
-        const userLinks = await getUserLinkDetails(db, req.renderData.username);
-        const userLinksRender = getRenderLinks(userLinks);
-        res.render("links", { links: userLinksRender, ...req.renderData });
-      })
-    );
+      const userLinks = await getUserLinkDetails(db, req.renderData.username);
+      const userLinksRender = getRenderLinks(userLinks);
+      res.render("links", { links: userLinksRender, ...req.renderData });
+    });
 
     //
     // profile
     //
 
-    server.get(
-      "/to/:shortLinkId",
-      wrap(async function (req, res) {
-        const linkObj = await db.linkGetByShortLinkId(req.params.shortLinkId);
+    server.get("/to/:shortLinkId", async function (req, res) {
+      const linkObj = await db.linkGetByShortLinkId(req.params.shortLinkId);
 
-        if (linkObj) {
-          const clickObj = {
-            ...linkObj,
-            when: new Date().getTime(),
-          };
+      if (linkObj) {
+        const clickObj = {
+          ...linkObj,
+          when: new Date().getTime(),
+        };
 
-          delete clickObj._id;
+        delete clickObj._id;
 
-          await db.clickAdd(clickObj);
+        await db.clickAdd(clickObj);
 
-          res.redirect(linkObj.link);
-          return;
-        }
-        res.sendStatus(404);
-      })
-    );
+        res.redirect(linkObj.link);
+        return;
+      }
+      res.sendStatus(404);
+    });
 
     //
     // encrypt text
