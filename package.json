@@ -20,7 +20,8 @@
   "license": "ISC",
   "homepage": "https://github.com/wheresvic/shorty#readme",
   "dependencyComments": {
-    "nanoid": ">4.0.0 only supports ESM"
+    "chai": ">5.x only supports ESM",
+    "nanoid": ">4.x only supports ESM"
   },
   "dependencies": {
     "bluebird": "3.7.2",
