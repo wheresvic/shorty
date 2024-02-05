@@ -1,7 +1,5 @@
 # shorty
 
-[![Build Status](https://travis-ci.org/wheresvic/shorty.svg?branch=master)](https://travis-ci.org/wheresvic/shorty)
-
 A simple self-hostable private url shortener using Node.js &amp; Nedb (a file-based Mongodb API compatible db).
 
 The idea behind shorty was to have a simple url shortening service that could be hosted on a cheap VPS with less than 1Gb RAM. Therefore, shorty uses only file-based storage to keep dependencies to a minimum.
