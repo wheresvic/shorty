@@ -108,7 +108,7 @@ class ShortyHttpServer {
     server.get("/", middlewareSetMimeTypeTextHtml, middlewareStats, function (req, res) {
       const errorMessage = req.flash("error")[0];
       if (errorMessage) {
-        req.renderData.notification = { message: errorMessage, type: "error" };
+        req.renderData.notification = { message: errorMessage, type: "is-danger" };
       } else {
         req.flash("error", "");
       }
@@ -140,20 +140,20 @@ class ShortyHttpServer {
       if (linkObj.userId) {
         const { error } = linkSchema.validate(linkObj);
         if (error) {
-          req.renderData.notification = { message: error.message, type: "error" };
+          req.renderData.notification = { message: error.message, type: "is-danger" };
         } else {
           try {
             linkObj = await shortenLink(ic, db, linkObj);
             req.renderData.notification = {
               message: "Successfully shortened link: " + linkObj.link,
-              type: "success",
+              type: "is-success",
             };
           } catch (e) {
-            req.renderData.notification = { message: e.message, type: "error" };
+            req.renderData.notification = { message: e.message, type: "is-danger" };
           }
         }
       } else {
-        req.renderData.notification = { message: "Need to be logged in to perform this action!", type: "error" };
+        req.renderData.notification = { message: "Need to be logged in to perform this action!", type: "is-danger" };
       }
 
       /*
@@ -193,7 +193,7 @@ class ShortyHttpServer {
 
       await db.linkRemoveById(req.body.linkId);
       await db.clickRemoveByShortLinkId(req.body.shortLinkId);
-      req.renderData.notification = { message: "Successfully deleted link " + req.body.link, type: "success" };
+      req.renderData.notification = { message: "Successfully deleted link " + req.body.link, type: "is-success" };
 
       await viewLinks(req, res, db);
     });

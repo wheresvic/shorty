@@ -18,9 +18,9 @@ const doEncryptTextPost = function(req, res) {
 
   try {
     result = cryptoUtil.encrypt(text, cryptoUtil.getCipherKey(key), cryptoUtil.defaultSaltGenerator);
-    req.renderData.notification = { message: "Successfully encrypted text.", type: "success" };
+    req.renderData.notification = { message: "Successfully encrypted text.", type: "is-success" };
   } catch (err) {
-    req.renderData.notification = { message: "Error " + err.message, type: "error" };
+    req.renderData.notification = { message: "Error " + err.message, type: "is-danger" };
   }
 
   res.render("encrypt-decrypt-text", { result, when: DateTime.now().toISO(), ...req.renderData });
@@ -38,9 +38,9 @@ const doDecryptTextPost = function(req, res) {
 
   try {
     result = cryptoUtil.decrypt(text, cryptoUtil.getCipherKey(key));
-    req.renderData.notification = { message: "Successfully decrypted text.", type: "success" };
+    req.renderData.notification = { message: "Successfully decrypted text.", type: "is-success" };
   } catch (err) {
-    req.renderData.notification = { message: "Error " + err.message, type: "error" };
+    req.renderData.notification = { message: "Error " + err.message, type: "is-danger" };
   }
 
   res.render("encrypt-decrypt-text", { result, when: DateTime.now().toISO(), ...req.renderData });
