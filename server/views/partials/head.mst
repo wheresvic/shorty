@@ -9,17 +9,13 @@
   <link rel="stylesheet" type="text/css" href="/css/font-lato.css" />
   <link rel="stylesheet" type="text/css" href="/css/font-montserrat.css" />
   <link rel="stylesheet" type="text/css" href="/css/fontawesome-free-6.4.0.min.css" />
-  <link rel="stylesheet" type="text/css" href="/css/noty.css" />
-  <!--<link rel="stylesheet" type="text/css" href="/css/noty-themes/semanticui.css" />-->
-  <link rel="stylesheet" type="text/css" href="/css/noty-themes/bulma.css" />
-
+  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css" />
 
   <link rel="stylesheet" type="text/css" href="/css-app/shorty.css" />
 
   <script type="text/javascript" src="/js/jquery-3.4.1.min.js"></script>
 
-  <script src="/js/noty.min.js" type="text/javascript"></script>
   <script src="/js/bulma-toast.min.js" type="text/javascript"></script>
 
   <script type="text/javascript">
@@ -74,17 +70,7 @@
   {{#notification}}
   <script type="text/javascript">
     $(document).ready(function() {
-      console.log("{{notification.type}}");
-
-      /*
-      new Noty({
-        theme: "bulma",
-        type: "{{notification.type}}",
-        text: "{{notification.message}}",
-        timeout: 3500
-        // container: ".notification"
-      }).show();
-      */
+      // console.log("{{notification.type}}");
 
       bulmaToast.toast({
         message: "{{notification.message}}", type: "{{notification.type}}", dismissible: true,
