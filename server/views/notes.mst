@@ -50,21 +50,21 @@
 
               <div class="columns mb-2">
                 <div class="column has-text-centered">
-                  {{> partials/select-category}}
+                  <a class="button is-primary" href="/notes-add">Add Note</a>
                 </div>
               </div>
 
-              {{^links}}
+              {{^notes}}
               <div class="columns is-centered">
                 <div class="column is-6">
                   <div class="notification is-warning">
-                    No links found!
+                    No notes found!
                   </div>
                 </div>
               </div>
-              {{/links}}
+              {{/notes}}
 
-              {{#links}}
+              {{#notes}}
               <div class="columns is-vcentered">
                 <div class="column is-2-tablet">
                   <a href="{{ shortLink }}">{{ shortLinkId }}</a>
@@ -93,7 +93,7 @@
                   </form>
                 </div>
               </div>
-              {{/links}}
+              {{/notes}}
             </div>
           </div>
         </div>

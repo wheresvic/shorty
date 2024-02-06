@@ -16,6 +16,7 @@ const auth = require("./auth");
 const linkSchema = require("../schemas/link");
 const { generateShortLinkObj, createShortLink } = require("../util/link-util");
 const routesEncryptDecryptText = require("./routes-encrypt-decrypt-text");
+const routesNotes = require("./routes-notes");
 const { filter } = require("domutils");
 
 // TODO: cache?
@@ -228,6 +229,19 @@ class ShortyHttpServer {
     server.get("/encrypt-decrypt-text", middlewareSetMimeTypeTextHtml, routesEncryptDecryptText.encryptTextGet);
     server.post("/do-encrypt-text", middlewareSetMimeTypeTextHtml, routesEncryptDecryptText.doEncryptTextPost);
     server.post("/do-decrypt-text", middlewareSetMimeTypeTextHtml, routesEncryptDecryptText.doDecryptTextPost);
+
+    //
+    // notes management
+    //
+    server.get("/notes", middlewareSetMimeTypeTextHtml, async function (req, res) {
+      await routesNotes.notesGet(ic, db, req, res);
+    });
+    server.get("/notes-add", middlewareSetMimeTypeTextHtml, async function (req, res) {
+      await routesNotes.notesAddGet(ic, db, req, res);
+    });
+    server.post("/do-notes-add", middlewareSetMimeTypeTextHtml, async function (req, res) {
+      await routesNotes.doNotesAddPost(ic, db, req, res);
+    });
 
     //
     // auth

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+{{> partials/head}}
+
+<body>
+  <div id="main-content-container">
+    {{> partials/navbar}}
+    <div id="main-content">
+      <section class="section">
+        <div class="container`">
+          <div class="columns">
+            <div class="column is-8-desktop is-offset-2-desktop is-6-tablet is-offset-3-tablet">
+              <form>
+                <div class="field">
+                  <label class="label">Title</label>
+                  <div class="control has-icons-left">
+                    <input id="notes-title" name="notesAddTitle" class="input is-danger" type="text" placeholder="title"
+                      value="" />
+                    <span class="icon is-small is-left">
+                      <i class="fas fa-key"></i>
+                    </span>
+                    <!--
+                      <span class="icon is-small is-right">
+                        <i class="fas fa-check"></i>
+                      </span>
+                      -->
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label class="label">Text</label>
+                  <div class="control">
+                    <textarea id="notes-text" name="notesAddText" class="textarea" placeholder="Textarea" rows="10"></textarea>
+                  </div>
+                </div>
+
+                <div class="field is-grouped">
+                  <div class="control">
+                    <button id="btn-notes-add" type="submit" class="button is-link" value="notes-add" formmethod="POST"
+                      formaction="/do-notes-add" disabled="disabled">
+                      Add note
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          {{#result}}
+          <div class="columns">
+            <div class="column is-8-desktop is-offset-2-desktop is-6-tablet is-offset-3-tablet">
+              <form>
+                <div class="field">
+                  <label class="label">Result ({{ when }})</label>
+                  <div class="control">
+                    <textarea id="result-encrypt-decrypt" name="result-encrypt-decrypt" class="textarea"
+                      readonly="readonly">{{ result }}</textarea>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          {{/result}}
+        </div>
+      </section>
+    </div>
+    <!-- end main-content-container -->
+    {{> partials/footer}}
+  </div>
+
+  <script type="text/javascript">
+    $notesTitle = $("#notes-title");
+    $notesText = $("#notes-text");
+    $btnNotesAdd = $("#btn-notes-add");
+
+    minCharacters = 8;
+
+    function validateNotesAddContent(eventData) {
+      var $field = $(eventData.target);
+      var currentVal = $field.val();
+
+      var titleVal = $notesTitle.val();
+      var textVal = $notesText.val();
+
+      if (currentVal.length < minCharacters) {
+        $field.removeClass("is-success");
+        $field.addClass("is-danger");
+
+      } else {
+        $field.removeClass("is-danger");
+        $field.addClass("is-success");
+
+      }
+
+      if (titleVal.length < minCharacters || textVal.length < minCharacters) {
+        $btnNotesAdd.prop("disabled", "disabled");
+      } else {
+        $btnNotesAdd.prop("disabled", "");
+      }
+    }
+
+    $notesTitle.on("keyup", {}, validateNotesAddContent);
+    $notesTitle.on("focusout", {}, validateNotesAddContent);
+    $notesText.on("keyup", {}, validateNotesAddContent);
+    $notesText.on("focusout", {}, validateNotesAddContent);
+  </script>
+</body>
+
+</html>
