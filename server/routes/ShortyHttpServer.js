@@ -18,6 +18,7 @@ const { generateShortLinkObj, createShortLink } = require("../util/link-util");
 const routesEncryptDecryptText = require("./routes-encrypt-decrypt-text");
 const routesNotes = require("./routes-notes");
 const { filter } = require("domutils");
+const { func } = require("joi");
 
 // TODO: cache?
 
@@ -96,6 +97,14 @@ class ShortyHttpServer {
       } catch (err) {
         next(err);
       }
+    };
+
+    const middlewareAuth = function (req, res, next) {
+      if (!req.renderData.username) {
+        res.redirect("/");
+        return;
+      }
+      next();
     };
 
     //
@@ -233,13 +242,13 @@ class ShortyHttpServer {
     //
     // notes management
     //
-    server.get("/notes", middlewareSetMimeTypeTextHtml, async function (req, res) {
+    server.get("/notes", middlewareAuth, middlewareSetMimeTypeTextHtml, async function (req, res) {
       await routesNotes.notesGet(ic, db, req, res);
     });
-    server.get("/notes-add", middlewareSetMimeTypeTextHtml, async function (req, res) {
+    server.get("/notes-add", middlewareAuth, middlewareSetMimeTypeTextHtml, async function (req, res) {
       await routesNotes.notesAddGet(ic, db, req, res);
     });
-    server.post("/do-notes-add", middlewareSetMimeTypeTextHtml, async function (req, res) {
+    server.post("/do-notes-add", middlewareAuth, middlewareSetMimeTypeTextHtml, async function (req, res) {
       await routesNotes.doNotesAddPost(ic, db, req, res);
     });
 
@@ -253,7 +262,7 @@ class ShortyHttpServer {
     );
 
     server.get("/logout", function (req, res) {
-      req.logout();
+      req.logout(() => {});
       res.redirect("/");
     });
 
